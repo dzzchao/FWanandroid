@@ -1,14 +1,12 @@
 package com.dzzchao.fwanandroid.ui.login
 
-import android.provider.Settings
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
+import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.data.LoginRepository
 import com.dzzchao.fwanandroid.data.Result
-
-import com.dzzchao.fwanandroid.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,11 +14,16 @@ import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
+    //记住密码的
+    private val loginRememberPwd = MutableLiveData<LoginRememberPwd>()
+    val loginRememberPwdResult: LiveData<LoginRememberPwd> = loginRememberPwd
+
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
+
 
     /**
      * 登录方法
@@ -62,5 +65,13 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
+    }
+
+    fun loginRememeberPwdChanged(checked: Boolean) {
+        if (checked) {
+
+        } else {
+
+        }
     }
 }

@@ -7,9 +7,6 @@ const val BASEURL = "https://www.wanandroid.com"
 
 class App : Application() {
 
-
-
-
     override fun onCreate() {
         super.onCreate()
 
