@@ -15,7 +15,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.dzzchao.fwanandroid.MainActivity
+import com.dzzchao.fwanandroid.ui.MainActivity
 import com.dzzchao.fwanandroid.R
 
 class LoginActivity : AppCompatActivity() {

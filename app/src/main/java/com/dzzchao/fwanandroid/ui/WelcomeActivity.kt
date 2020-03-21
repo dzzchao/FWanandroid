@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.dzzchao.fwanandroid.MainActivity
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.storage.sp.SPHelper.Companion.getBoolean
 import com.dzzchao.fwanandroid.storage.sp.spIsLogin
