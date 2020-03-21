@@ -7,15 +7,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.dzzchao.fwanandroid.MainActivity
 import com.dzzchao.fwanandroid.R
-import timber.log.Timber
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
-        val cbRememberPwd = findViewById<CheckBox>(R.id.cbPassword)
 
         //初始化viewmodel
         loginViewModel = ViewModelProvider(
@@ -68,12 +68,8 @@ class LoginActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
 
             //Complete and destroy login activity once successful
-
         })
 
-        cbRememberPwd.afterCheckStateChanged {
-            loginViewModel.loginRememeberPwdChanged(it)
-        }
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
@@ -142,10 +138,3 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     })
 }
 
-fun CheckBox.afterCheckStateChanged(afterChanged: (Boolean) -> Unit) {
-    this.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-        override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            afterChanged.invoke(isChecked)
-        }
-    })
-}

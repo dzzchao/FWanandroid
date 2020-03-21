@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.data.LoginRepository
 import com.dzzchao.fwanandroid.data.Result
+import com.dzzchao.fwanandroid.storage.sp.SPHelper
+import com.dzzchao.fwanandroid.storage.sp.spIsLogin
+import com.dzzchao.fwanandroid.storage.sp.spPassword
+import com.dzzchao.fwanandroid.storage.sp.spUserName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,16 +18,11 @@ import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
-    //记住密码的
-    private val loginRememberPwd = MutableLiveData<LoginRememberPwd>()
-    val loginRememberPwdResult: LiveData<LoginRememberPwd> = loginRememberPwd
-
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
-
 
     /**
      * 登录方法
@@ -36,6 +35,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                 if (result is Result.Success) {
                     _loginResult.value =
                         LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                    SPHelper.putString(spUserName, username)
+                    SPHelper.putString(spPassword, username)
+                    SPHelper.putBoolean(spIsLogin, true)
                 } else {
                     _loginResult.value = LoginResult(error = R.string.login_failed)
                 }
@@ -67,11 +69,4 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         return password.length > 5
     }
 
-    fun loginRememeberPwdChanged(checked: Boolean) {
-        if (checked) {
-
-        } else {
-
-        }
-    }
 }
