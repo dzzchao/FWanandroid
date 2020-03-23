@@ -4,6 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.data.LoginRepository
 import com.dzzchao.fwanandroid.data.Result
@@ -29,18 +30,22 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
      */
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        GlobalScope.launch(Dispatchers.IO) {
-            val result = loginRepository.login(username, password)
-            withContext(Dispatchers.Main) {
-                if (result is Result.Success) {
-                    _loginResult.value =
-                        LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-                    SPHelper.putString(spUserName, username)
-                    SPHelper.putString(spPassword, username)
-                    SPHelper.putBoolean(spIsLogin, true)
-                } else {
-                    _loginResult.value = LoginResult(error = R.string.login_failed)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = loginRepository.login(username, password)
+                withContext(Dispatchers.Main) {
+                    if (result is Result.Success) {
+                        _loginResult.value =
+                            LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+                        SPHelper.putString(spUserName, username)
+                        SPHelper.putString(spPassword, username)
+                        SPHelper.putBoolean(spIsLogin, true)
+                    } else {
+                        _loginResult.value = LoginResult(error = R.string.login_failed)
+                    }
                 }
+            } catch (e: Exception) {
+                _loginResult.value = LoginResult(error = R.string.login_failed)
             }
         }
     }

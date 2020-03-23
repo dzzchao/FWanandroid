@@ -1,17 +1,21 @@
 package com.dzzchao.fwanandroid.retrofit
 
-import com.dzzchao.fwanandroid.retrofit.bean.LoginResp
-import com.dzzchao.fwanandroid.retrofit.bean.LogoutResp
-import com.dzzchao.fwanandroid.retrofit.bean.RegisterResp
+import com.dzzchao.fwanandroid.retrofit.bean.*
 import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface RetrofitService {
+
+
+    //首页
+    @GET("article/list/{page}/json")
+    suspend fun getHomeArticle(@Path("page") page: Int): HomeArticleResp
+
+    @GET("banner/json")
+    suspend fun getBanner(): HomeBannerResp
+
 
     @FormUrlEncoded
     @POST("user/login")

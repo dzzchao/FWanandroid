@@ -2,7 +2,6 @@ package com.dzzchao.fwanandroid.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.ui.favorite.FavoriteFragment
 import com.dzzchao.fwanandroid.ui.homepage.HomeFragment
@@ -13,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 beginTransaction.replace(R.id.frameLayout, UserFragment.newInstance())
             }
         }
+
         beginTransaction.commit()
     }
 }
