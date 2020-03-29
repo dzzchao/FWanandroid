@@ -1,15 +1,14 @@
 package com.dzzchao.fwanandroid.retrofit
 
 import com.dzzchao.fwanandroid.retrofit.bean.*
-import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
 interface RetrofitService {
 
-
     //首页
+
     @GET("article/list/{page}/json")
     suspend fun getHomeArticle(@Path("page") page: Int): HomeArticleResp
 
@@ -29,5 +28,4 @@ interface RetrofitService {
 
     @GET("user/logout/json")
     fun logout(): Call<LogoutResp>
-
 }

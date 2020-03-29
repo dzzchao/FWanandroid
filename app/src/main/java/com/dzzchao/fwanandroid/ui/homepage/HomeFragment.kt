@@ -14,7 +14,7 @@ import com.dzzchao.fwanandroid.R
 import kotlinx.android.synthetic.main.home_fragment.*
 import timber.log.Timber
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.home_fragment) {
 
     companion object {
         fun newInstance() = HomeFragment()

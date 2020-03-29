@@ -2,6 +2,8 @@ package com.dzzchao.fwanandroid.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.ui.favorite.FavoriteFragment
 import com.dzzchao.fwanandroid.ui.homepage.HomeFragment
@@ -17,7 +19,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        changeFragment()
+        val tabs = arrayListOf(
+            TabData("首页", R.drawable.ic_home_black_24dp) { HomeFragment.newInstance() },
+            TabData("体系", R.drawable.ic_menu_black_24dp) { TreeFragment.newInstance() },
+            TabData("收藏", R.drawable.ic_favorite_black_24dp) { FavoriteFragment.newInstance() },
+            TabData("我的", R.drawable.ic_person_outline_black_24dp) { UserFragment.newInstance() }
+        )
+
+        vpMain.offscreenPageLimit = tabs.size
+        vpMain.adapter = MainVpAdapter(this, tabs)
+        vpMain.isUserInputEnabled = false
+
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -31,30 +43,24 @@ class MainActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 Timber.d("onTabSelected %s", tab?.position)
                 tab?.let {
-                    changeFragment(it.position)
+                    vpMain.setCurrentItem(it.position, false)
                 }
             }
         })
     }
 
-    //切换fragment
-    private fun changeFragment(position: Int = 0) {
-        val beginTransaction = supportFragmentManager.beginTransaction()
-        when (position) {
-            0 -> {
-                beginTransaction.replace(R.id.frameLayout, HomeFragment.newInstance())
-            }
-            1 -> {
-                beginTransaction.replace(R.id.frameLayout, TreeFragment.newInstance())
-            }
-            2 -> {
-                beginTransaction.replace(R.id.frameLayout, FavoriteFragment.newInstance())
-            }
-            3 -> {
-                beginTransaction.replace(R.id.frameLayout, UserFragment.newInstance())
-            }
-        }
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
 
-        beginTransaction.commit()
+        //首帧开始的时间
+
     }
+
+
+    data class TabData(
+        val title: String,
+        val icon: Int,
+        val fragmentCreator: () -> Fragment
+    )
+
 }
