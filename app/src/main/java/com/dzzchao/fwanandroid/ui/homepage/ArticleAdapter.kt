@@ -1,6 +1,6 @@
 package com.dzzchao.fwanandroid.ui.homepage
 
-import android.opengl.Visibility
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dzzchao.fwanandroid.App
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.retrofit.bean.Datas
+import com.dzzchao.fwanandroid.webview.WebViewActivity
 import timber.log.Timber
 
 private const val TYPE_NORMAL = 1
 private const val TYPE_FOOT = 2
+
+const val INTENT_LINK = "INTENT_LINK"
 
 class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -33,7 +36,7 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
         return if (viewType == TYPE_NORMAL) {
-            ArticleViewHolder(itemView)
+            ArticleViewHolder(itemView, dataList)
         } else {
             FootViewHolder(footView)
         }
@@ -63,29 +66,45 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 holder.tvAuthor.text = dataBean.shareUser
             }
+
         } else {
             holder as FootViewHolder
             if (isMore) {
-                holder.footView.visibility = View.VISIBLE
+                holder.itemView.visibility = View.VISIBLE
                 holder.tvFootView.text = App.context.getString(R.string.loading)
             } else {
-                holder.footView.visibility = View.GONE
+                holder.itemView.visibility = View.GONE
             }
         }
     }
+
 
     fun updateData(tempList: MutableList<Datas>, hasMore: Boolean = true) {
         dataList.addAll(tempList)
         notifyDataSetChanged()
     }
+
+
 }
 
-class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ArticleViewHolder(
+    itemView: View,
+    dataList: MutableList<Datas>
+) : RecyclerView.ViewHolder(itemView) {
     val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
     val tvAuthor = itemView.findViewById<TextView>(R.id.tvAuthor)
 
     init {
         Timber.v("ArticleViewHolder()")
+        itemView.setOnClickListener {
+            val data = dataList.get(adapterPosition)
+            itemView.context.let {
+                val intent = Intent(it, WebViewActivity::class.java)
+                intent.putExtra(INTENT_LINK, data.link)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                it.startActivity(intent)
+            }
+        }
     }
 }
 

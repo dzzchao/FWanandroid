@@ -12,8 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".test.rxjava.TestRxJavaActivity"></activity>
-        <activity android:name=".test.AnnotationActivity"></activity>
+        <activity android:name=".webview.WebViewActivity"></activity>
+        <activity android:name=".test.rxjava.TestRxJavaActivity" />
+        <activity android:name=".test.AnnotationActivity" />
         <activity android:name=".ui.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
