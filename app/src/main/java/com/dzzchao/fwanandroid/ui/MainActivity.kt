@@ -3,7 +3,6 @@ package com.dzzchao.fwanandroid.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.ui.favorite.FavoriteFragment
 import com.dzzchao.fwanandroid.ui.homepage.HomeFragment
@@ -55,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         //首帧开始的时间
 
     }
-
 
     data class TabData(
         val title: String,

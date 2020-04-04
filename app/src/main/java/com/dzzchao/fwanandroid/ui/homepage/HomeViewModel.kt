@@ -10,18 +10,16 @@ import com.dzzchao.fwanandroid.retrofit.bean.HomeArticleResp
 import com.dzzchao.fwanandroid.retrofit.bean.HomeBannerResp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 
 class HomeViewModel : ViewModel() {
 
+    var currentPage = 0
 
-    val dataList: LinkedList<String> = LinkedList()
-    var articleList: LinkedList<Datas> = LinkedList()
-
+    val dataList = mutableListOf<String>()
+    val articleList = mutableListOf<Datas>()
 
     private val _bannerData = MutableLiveData<HomeBannerResp>()
     val bannerData: LiveData<HomeBannerResp> = _bannerData
-
 
     private val _articleData = MutableLiveData<HomeArticleResp>()
     val articleData: LiveData<HomeArticleResp> = _articleData
