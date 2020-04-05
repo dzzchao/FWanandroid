@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.homepage.HomeFragment">
 
+    <com.dzzchao.fwanandroid.view.TitleBar
+        android:id="@+id/homeTitleBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:rightButtonText="搜索"
+        app:titleText="首页" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpBanner"
@@ -15,11 +22,18 @@
 
     </androidx.viewpager2.widget.ViewPager2>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvAritcle"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvAritcle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>

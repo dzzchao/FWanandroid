@@ -1,6 +1,7 @@
 package com.dzzchao.fwanandroid.ui.homepage
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.utils.showToast
+import com.dzzchao.fwanandroid.view.TitleBar
 import kotlinx.android.synthetic.main.home_fragment.*
+import kotlinx.coroutines.handleCoroutineException
 import timber.log.Timber
 
 class HomeFragment : Fragment(R.layout.home_fragment) {
@@ -24,6 +28,7 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
     }
 
     private lateinit var viewModel: HomeViewModel
+    private var mHandler = Handler()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +48,19 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
         val bannerAdapter = BannerAdapter(viewModel.dataList)
         vpBanner.adapter = bannerAdapter
 
+
+        homeTitleBar.rightClickListener = object : TitleBar.OnRightClickListener {
+            override fun click() {
+                showToast("点击搜索")
+            }
+        }
+
+        swipeRefresh.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                mHandler.postDelayed({ swipeRefresh.isRefreshing = false }, 2000)
+            }
+        })
+
         //设置recyclerView
         val linearLayoutManager = LinearLayoutManager(context)
         rcvAritcle.layoutManager = linearLayoutManager
@@ -52,15 +70,9 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
 
         //监听scroll
         rcvAritcle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-
-                }
-            }
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val lastItemPosition = linearLayoutManager.findLastVisibleItemPosition()
-                if(lastItemPosition == articleAdapter.itemCount - 1) {
+                if (lastItemPosition == articleAdapter.itemCount - 1) {
                     viewModel.requestArticleData(++viewModel.currentPage)
                 }
             }
@@ -81,6 +93,7 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
         })
 
         viewModel.articleData.observe(viewLifecycleOwner, Observer {
+            swipeRefresh.isRefreshing = false
             if (it.errorCode == 0) {
                 //展示界面
                 viewModel.articleList.clear()

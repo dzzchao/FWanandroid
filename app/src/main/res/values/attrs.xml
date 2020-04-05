@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <declare-styleable name="TitleBar">
+        <attr name="titleText" format="string">Title</attr>
+        <attr name="titleColor" format="color">#000</attr>
+        <attr name="titleSize" format="dimension">16sp</attr>
+        <attr name="leftButtonBackground" format="reference" />
+        <attr name="rightButtonBackground" format="reference" />
+        <attr name="leftButtonText" format="string" />
+        <attr name="rightButtonText" format="string" />
+        <attr name="hideLeftButton" format="boolean">true</attr>
+        <attr name="hideRightButton" format="boolean">true</attr>
+
+    </declare-styleable>
+
+
+</resources>
