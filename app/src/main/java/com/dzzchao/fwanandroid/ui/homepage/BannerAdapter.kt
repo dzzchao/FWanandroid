@@ -29,7 +29,10 @@ class BannerAdapter(val dataList: List<String>) : RecyclerView.Adapter<BannerVie
                 return true
             }
         })
-        Glide.with(holder.imageView.context).load(dataList.get(position)).into(holder.imageView)
+        Glide.with(holder.imageView.context)
+            .load(dataList.get(position))
+            .centerCrop()
+            .into(holder.imageView)
     }
 
 }

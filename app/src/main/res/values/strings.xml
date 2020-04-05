@@ -17,4 +17,5 @@
 
 
     <string name="loading">正在加载…</string>
+    <string name="article_top">[置顶]</string>
 </resources>

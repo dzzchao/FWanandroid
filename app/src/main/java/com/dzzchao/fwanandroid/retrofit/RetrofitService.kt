@@ -15,6 +15,10 @@ interface RetrofitService {
     @GET("banner/json")
     suspend fun getBanner(): HomeBannerResp
 
+    @GET("article/top/json")
+    suspend fun getHomeArticleTop(): ArticleTopResp
+
+    //用户相关
 
     @FormUrlEncoded
     @POST("user/login")

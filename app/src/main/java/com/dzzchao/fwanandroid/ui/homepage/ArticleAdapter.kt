@@ -20,7 +20,7 @@ const val INTENT_LINK = "INTENT_LINK"
 
 class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val dataList = mutableListOf<Datas>()
+    private val dataList = mutableListOf<ArticleShowData>()
     private var isMore = true;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -66,6 +66,11 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 holder.tvAuthor.text = dataBean.shareUser
             }
+            if (dataBean.isTop) {
+                holder.tvTop.visibility = View.VISIBLE
+            } else {
+                holder.tvTop.visibility = View.GONE
+            }
 
         } else {
             holder as FootViewHolder
@@ -78,8 +83,7 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-
-    fun updateData(tempList: MutableList<Datas>, hasMore: Boolean = true) {
+    fun updateData(tempList: MutableList<ArticleShowData>, hasMore: Boolean = true) {
         dataList.addAll(tempList)
         notifyDataSetChanged()
     }
@@ -89,10 +93,11 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 class ArticleViewHolder(
     itemView: View,
-    dataList: MutableList<Datas>
+    dataList: MutableList<ArticleShowData>
 ) : RecyclerView.ViewHolder(itemView) {
     val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
     val tvAuthor = itemView.findViewById<TextView>(R.id.tvAuthor)
+    val tvTop = itemView.findViewById<TextView>(R.id.tvTop)
 
     init {
         Timber.v("ArticleViewHolder()")
@@ -110,8 +115,6 @@ class ArticleViewHolder(
 
 class FootViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val tvFootView = itemView.findViewById<TextView>(R.id.tv_foot_view)
-    val footView = itemView.findViewById<LinearLayout>(R.id.footView)
-
 
     init {
         Timber.v("FootViewHolder()")

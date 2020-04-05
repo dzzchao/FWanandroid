@@ -1,36 +1,11 @@
-# FWanandroid Demo
+# wanandroid Demo
 
-Kotlin + Retrofit
+## 技术
 
-
-# TODO 主界面
-
-1. 主界面置顶文章和普通文章同时请求，但要同时显示，把置顶文章显示在最上面。
-2. 主界面TabLayout两个，一个是文章，一个是搜索热词
-3. 自定义状态栏
-4. 主界面搜索
+- Kotlin
+- Retrofit
+- RxJava
+- glide
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-人生经历总无常，你又何必介怀心上
---《忧伤的嫖客》
+> 人生经历总无常，你又何必介怀心上

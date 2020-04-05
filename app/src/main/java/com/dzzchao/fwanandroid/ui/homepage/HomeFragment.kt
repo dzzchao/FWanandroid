@@ -2,11 +2,10 @@ package com.dzzchao.fwanandroid.ui.homepage
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,10 +16,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.utils.showToast
 import com.dzzchao.fwanandroid.view.TitleBar
+import io.reactivex.Flowable
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.home_fragment.*
-import kotlinx.coroutines.handleCoroutineException
 import timber.log.Timber
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
+/**
+ * banner数据单独与文章列表数据分开单独请求
+ * 文章列表分为置顶文章和普通的文章列表，这两个同时请求，可以有多重方案来做 - (在这里我们用协程来做)
+ */
 class HomeFragment : Fragment(R.layout.home_fragment) {
 
     companion object {
@@ -28,6 +35,7 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
     }
 
     private lateinit var viewModel: HomeViewModel
+
     private var mHandler = Handler()
 
     override fun onCreateView(
@@ -37,17 +45,25 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         viewModel.requestBannerData()
-        viewModel.requestArticleData()
+        viewModel.requestArticleDataFirst()
 
+
+        //banner
         val bannerAdapter = BannerAdapter(viewModel.dataList)
         vpBanner.adapter = bannerAdapter
 
+        val runnable = object : Runnable {
+            override fun run() {
+                vpBanner.setCurrentItem((vpBanner.currentItem + 1) % viewModel.dataList.size, true)
+                mHandler.postDelayed(this, 2000)
+            }
+        }
+        mHandler.postDelayed(runnable, 2000)
 
         homeTitleBar.rightClickListener = object : TitleBar.OnRightClickListener {
             override fun click() {
@@ -92,13 +108,35 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
             }
         })
 
-        viewModel.articleData.observe(viewLifecycleOwner, Observer {
+        //第一次请求文章列表的数据
+        viewModel.homeData.observe(viewLifecycleOwner, Observer {
             swipeRefresh.isRefreshing = false
-            if (it.errorCode == 0) {
+
+            if (it.homeArticleResp.errorCode == 0) {
                 //展示界面
                 viewModel.articleList.clear()
-                it.data?.datas?.forEach {
-                    viewModel.articleList.add(it)
+
+                it.articletopResp.data.forEach { top ->
+                    viewModel.articleList.add(
+                        ArticleShowData(
+                            top.title,
+                            top.link,
+                            top.author,
+                            top.shareUser,
+                            true
+                        )
+                    )
+                }
+
+                it.homeArticleResp.data?.datas?.forEach { data ->
+                    viewModel.articleList.add(
+                        ArticleShowData(
+                            data.title,
+                            data.link,
+                            data.author,
+                            data.shareUser
+                        )
+                    )
                 }
                 articleAdapter.apply {
                     updateData(viewModel.articleList)
@@ -108,5 +146,31 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
                 showToast("文章列表请求失败")
             }
         })
+
+        //后续的请求
+        viewModel.articleResp.observe(viewLifecycleOwner, Observer {
+            swipeRefresh.isRefreshing = false
+            if (it.errorCode == 0) {
+                //展示界面
+                viewModel.articleList.clear()
+                it.data?.datas?.forEach { data ->
+                    viewModel.articleList.add(
+                        ArticleShowData(
+                            data.title,
+                            data.link,
+                            data.author,
+                            data.shareUser
+                        )
+                    )
+                }
+                articleAdapter.apply {
+                    updateData(viewModel.articleList)
+                }
+            } else {
+                //请求失败
+                showToast("文章列表请求失败")
+            }
+        })
+
     }
 }

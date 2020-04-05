@@ -21,30 +21,34 @@ class App : Application() {
         super.onCreate()
         //traceview
         //Debug.startMethodTracing("app")
-        TraceCompat.beginSection("apponCreate")
+        //TraceCompat.beginSection("apponCreate")
 
         context = applicationContext
 
-
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-
-            val clazz = ActivityLifecycleCallbacks::class.java
-            val callback = Proxy.newProxyInstance(
-                clazz.classLoader,
-                arrayOf(clazz)
-            ) { _, method, args ->
-                Timber.d(
-                    "LifeCycle: %s  %s", args!![0].javaClass.simpleName,
-                    method?.name
-                )
-                Unit
-            } as ActivityLifecycleCallbacks
-            registerActivityLifecycleCallbacks(callback)
+            registerLifecycle()
         }
-
         //Debug.stopMethodTracing()
-        TraceCompat.endSection()
+        //TraceCompat.endSection()
+    }
+
+    /**
+     * 监听生命周期
+     */
+    private fun registerLifecycle() {
+        val clazz = ActivityLifecycleCallbacks::class.java
+        val callback = Proxy.newProxyInstance(
+            clazz.classLoader,
+            arrayOf(clazz)
+        ) { _, method, args ->
+            Timber.d(
+                "LifeCycle: %s  %s", args!![0].javaClass.simpleName,
+                method?.name
+            )
+            Unit
+        } as ActivityLifecycleCallbacks
+        registerActivityLifecycleCallbacks(callback)
     }
 
 
@@ -52,8 +56,6 @@ class App : Application() {
         super.attachBaseContext(base)
         //可以再这里记录开始时间，然后到自己的feed流的第一条数据显示的时间，可以当做是App的启动时间来计算
         //可以线上采集
-
-
 
     }
 }
