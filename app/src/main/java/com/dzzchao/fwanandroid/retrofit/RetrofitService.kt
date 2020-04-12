@@ -18,6 +18,18 @@ interface RetrofitService {
     @GET("article/top/json")
     suspend fun getHomeArticleTop(): ArticleTopResp
 
+    @GET("hotkey/json")
+    suspend fun getSearchHotWords(): SearchHotWordsResp
+
+    //搜索
+
+    @FormUrlEncoded
+    @POST("article/query/{page}/json")
+    suspend fun searchKeyWords(
+        @Field("k") keywords: String,
+        @Path("page") page: Int = 0
+    ): SearchKeyWordsResp
+
     //用户相关
 
     @FormUrlEncoded

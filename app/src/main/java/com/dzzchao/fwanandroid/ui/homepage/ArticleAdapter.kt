@@ -18,6 +18,9 @@ private const val TYPE_FOOT = 2
 
 const val INTENT_LINK = "INTENT_LINK"
 
+/**
+ * 文章列表
+ */
 class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val dataList = mutableListOf<ArticleShowData>()
@@ -66,6 +69,8 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 holder.tvAuthor.text = dataBean.shareUser
             }
+
+            //处理置顶文字样式
             if (dataBean.isTop) {
                 holder.tvTop.visibility = View.VISIBLE
             } else {
@@ -87,7 +92,6 @@ class ArticleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         dataList.addAll(tempList)
         notifyDataSetChanged()
     }
-
 
 }
 

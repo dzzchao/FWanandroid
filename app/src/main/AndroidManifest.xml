@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".webview.WebViewActivity"></activity>
+        <activity android:name=".ui.search.SearchActivity" />
+        <activity android:name=".webview.WebViewActivity" />
         <activity android:name=".test.rxjava.TestRxJavaActivity" />
         <activity android:name=".test.AnnotationActivity" />
         <activity android:name=".ui.WelcomeActivity">

@@ -1,5 +1,6 @@
 package com.dzzchao.fwanandroid.ui.homepage
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dzzchao.fwanandroid.R
+import com.dzzchao.fwanandroid.ui.search.SearchActivity
 import com.dzzchao.fwanandroid.utils.showToast
 import com.dzzchao.fwanandroid.view.TitleBar
 import io.reactivex.Flowable
@@ -38,6 +40,13 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
 
     private var mHandler = Handler()
 
+    private var bannerRunnable = object : Runnable {
+        override fun run() {
+            vpBanner.setCurrentItem((vpBanner.currentItem + 1) % viewModel.dataList.size, true)
+            mHandler.postDelayed(this, 2000)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,17 +66,13 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
         val bannerAdapter = BannerAdapter(viewModel.dataList)
         vpBanner.adapter = bannerAdapter
 
-        val runnable = object : Runnable {
-            override fun run() {
-                vpBanner.setCurrentItem((vpBanner.currentItem + 1) % viewModel.dataList.size, true)
-                mHandler.postDelayed(this, 2000)
-            }
-        }
-        mHandler.postDelayed(runnable, 2000)
+
+        mHandler.postDelayed(bannerRunnable, 2000)
 
         homeTitleBar.rightClickListener = object : TitleBar.OnRightClickListener {
             override fun click() {
-                showToast("点击搜索")
+                val intent = Intent(activity, SearchActivity::class.java)
+                startActivity(intent)
             }
         }
 
@@ -84,7 +89,7 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
         rcvAritcle.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         rcvAritcle.adapter = articleAdapter
 
-        //监听scroll
+        //监听scroll,做上拉加载。
         rcvAritcle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val lastItemPosition = linearLayoutManager.findLastVisibleItemPosition()
@@ -172,5 +177,10 @@ class HomeFragment : Fragment(R.layout.home_fragment) {
             }
         })
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mHandler.removeCallbacks(bannerRunnable)
     }
 }
