@@ -3,7 +3,10 @@ package com.dzzchao.fwanandroid
 import android.app.Application
 import android.content.Context
 import android.os.Debug
+import android.os.Environment
 import androidx.core.os.TraceCompat
+import com.tencent.mars.xlog.Log
+import com.tencent.mars.xlog.Xlog
 import timber.log.Timber
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -12,6 +15,7 @@ import java.lang.reflect.Proxy
 const val BASEURL = "https://www.wanandroid.com"
 
 class App : Application() {
+
 
     companion object {
         lateinit var context: Context
@@ -25,12 +29,58 @@ class App : Application() {
 
         context = applicationContext
 
+        System.loadLibrary("c++_shared");
+        System.loadLibrary("marsxlog");
+
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             registerLifecycle()
         }
+
+        initXlog()
+
+
         //Debug.stopMethodTracing()
         //TraceCompat.endSection()
+    }
+
+    private fun initXlog() {
+        System.loadLibrary("c++_shared");
+        System.loadLibrary("marsxlog");
+
+        val SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
+        val logPath = SDCARD + "/marssample/log";
+
+        // this is necessary, or may cash for SIGBUS
+        val cachePath = this.getFilesDir().path + "/xlog"
+
+        //init xlog
+        if (BuildConfig.DEBUG) {
+            Xlog.appenderOpen(
+                Xlog.LEVEL_DEBUG,
+                Xlog.AppednerModeAsync,
+                cachePath,
+                logPath,
+                "MarsSample",
+                0,
+                ""
+            )
+            Xlog.setConsoleLogOpen(true);
+
+        } else {
+            Xlog.appenderOpen(
+                Xlog.LEVEL_INFO,
+                Xlog.AppednerModeAsync,
+                cachePath,
+                logPath,
+                "MarsSample",
+                0,
+                ""
+            )
+            Xlog.setConsoleLogOpen(false);
+        }
+
+        Log.setLogImp(Xlog())
     }
 
     /**
