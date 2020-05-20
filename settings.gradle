@@ -1,3 +1,2 @@
-include ':xlog'
 rootProject.name='FWanandroid'
 include ':app'
