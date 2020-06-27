@@ -8,6 +8,7 @@ import com.dzzchao.fwanandroid.R
 import com.dzzchao.fwanandroid.storage.sp.SPHelper.Companion.getBoolean
 import com.dzzchao.fwanandroid.storage.sp.spIsLogin
 import com.dzzchao.fwanandroid.ui.login.LoginActivity
+import timber.log.Timber
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -17,8 +18,10 @@ class WelcomeActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             if (getBoolean(spIsLogin)) {
+                Timber.d("已经登陆过")
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
+                Timber.d("还没登陆过")
                 startActivity(Intent(this, LoginActivity::class.java))
             }
             finish()

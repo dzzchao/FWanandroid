@@ -12,70 +12,95 @@ import com.dzzchao.fwanandroid.retrofit.bean.HomeBannerResp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeViewModel : ViewModel() {
 
     var currentPage = 0
 
-    val dataList = mutableListOf<String>()
+    val bannerDataList = mutableListOf<String>()
     val articleList = mutableListOf<ArticleShowData>()
 
-    private val _bannerData = MutableLiveData<HomeBannerResp>()
-    val bannerData: LiveData<HomeBannerResp> = _bannerData
-
-
-    //主界面的文章列表 - 第一次
-    private val _homeData = MutableLiveData<HomeData>()
-    val homeData: LiveData<HomeData> = _homeData
-
-
-    private val _articleResp = MutableLiveData<HomeArticleResp>()
-    val articleResp: LiveData<HomeArticleResp> = _articleResp
-
-
-    fun requestBannerData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val bannerResp = RetrofitHelper.retrofitService.getBanner()
-                _bannerData.postValue(bannerResp)
-            } catch (e: Exception) {
-                _bannerData.postValue(HomeBannerResp(-1, "request error - banner", null))
-            }
-        }
-    }
 
 
     /**
-     * 第一次请求
+     * 请求banner显示数据
      */
-    fun requestArticleDataFirst(page: Int = 0) {
+    fun requestBannerData(): LiveData<HomeBannerResp> {
+        val liveData = MutableLiveData<HomeBannerResp>()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val bannerResp = RetrofitHelper.retrofitService.getBanner()
+                liveData.postValue(bannerResp)
+            } catch (e: Exception) {
+                liveData.postValue(HomeBannerResp(-1, "request error - banner", null))
+            }
+        }
+        return liveData
+    }
+
+    /**
+     * 列表数据和置顶文章数据是两个接口
+     * 尽量封装到一起
+     *
+     */
+
+    /**
+     * 第一次请求
+     * @param isNeedBannerAndTop 是否需要返回置顶数据和置顶文章
+     */
+    fun requestArticleData(
+        page: Int = 0,
+        isNeedBannerAndTop: Boolean = false
+    ): LiveData<HomeData> {
+        Timber.d("requestArticleData $page")
+        val liveData = MutableLiveData<HomeData>()
+
         viewModelScope.launch {
             val articleRespD =
                 async(Dispatchers.IO) { RetrofitHelper.retrofitService.getHomeArticle(page) }
-            val articleTopRespD =
-                async(Dispatchers.IO) { RetrofitHelper.retrofitService.getHomeArticleTop() }
-
             val articleResp = articleRespD.await()
-            val articleTopResp = articleTopRespD.await()
 
-            _homeData.postValue(HomeData(articleResp, articleTopResp))
+            if (isNeedBannerAndTop) {
+                val articleTopRespD = async(Dispatchers.IO) {
+                    RetrofitHelper.retrofitService.getHomeArticleTop()
+                }
+                val articleTopResp = articleTopRespD.await()
+
+                val bannerRespD = async(Dispatchers.IO) {
+                    RetrofitHelper.retrofitService.getBanner()
+                }
+
+                val bannerResp = bannerRespD.await()
+
+                liveData.postValue(HomeData(articleResp, articleTopResp, bannerResp))
+            } else {
+                liveData.postValue(HomeData(articleResp, null, null))
+            }
         }
+
+        return liveData
     }
 
-    fun requestArticleData(page: Int = 0) {
-        viewModelScope.launch {
-            val articleRespD =
-                async(Dispatchers.IO) { RetrofitHelper.retrofitService.getHomeArticle(page) }
-            val articleResp = articleRespD.await()
-            _articleResp.postValue(articleResp)
-        }
-    }
+    /**
+     * 分页数据
+     */
+//    fun requestArticleData(page: Int = 0) {
+//        Timber.d("主界面列表加载更多 page = $page")
+//        viewModelScope.launch {
+//            val articleRespD =
+//                async(Dispatchers.IO) { RetrofitHelper.retrofitService.getHomeArticle(page) }
+//            val articleResp = articleRespD.await()
+//            _articleResp.postValue(articleResp)
+//        }
+//    }
 }
 
 
 data class HomeData(
     val homeArticleResp: HomeArticleResp,
-    val articletopResp: ArticleTopResp
+    val articleTopResp: ArticleTopResp?,
+    val homeBannerResp: HomeBannerResp?
 )
 
 data class ArticleShowData(

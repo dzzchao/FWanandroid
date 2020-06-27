@@ -1,5 +1,6 @@
 package com.dzzchao.fwanandroid
 
+import android.app.Person
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -13,5 +14,17 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+
+        val (name,age) = test()
+        print(name)
+        print(age)
     }
+
+    private fun test(): com.dzzchao.fwanandroid.Person {
+        return Person("zhangchao",12)
+    }
+
+
 }
+
+data class Person(val name:String,val age:Int)

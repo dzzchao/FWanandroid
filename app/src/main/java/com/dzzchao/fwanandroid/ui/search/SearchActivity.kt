@@ -94,13 +94,13 @@ class SearchActivity : AppCompatActivity() {
     private fun initRecyclerSearch() {
         showSearchListUI()
 
-        val articleAdapter = ArticleAdapter()
-        recycler_search_data.let {
-            it.adapter = articleAdapter
-            it.layoutManager = LinearLayoutManager(this)
-            it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        }
-        articleAdapter.updateData(showList)
+//        val articleAdapter = ArticleAdapter()
+//        recycler_search_data.let {
+//            it.adapter = articleAdapter
+//            it.layoutManager = LinearLayoutManager(this)
+//            it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+//        }
+//        articleAdapter.updateData(showList)
 
 
     }

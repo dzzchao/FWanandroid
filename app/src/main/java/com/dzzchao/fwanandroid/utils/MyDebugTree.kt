@@ -1,11 +1,13 @@
 package com.dzzchao.fwanandroid.utils
 
-import android.util.Log
+import com.tencent.mars.xlog.Log
 import timber.log.Timber
 
 class MyDebugTree : Timber.DebugTree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        super.log(priority, tag, message, t)
+        val newMessage = "fwandroid=>$message"
+        super.log(priority, tag, newMessage, t)
     }
+
 }

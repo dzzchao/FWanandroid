@@ -1,12 +1,14 @@
 package com.dzzchao.fwanandroid.retrofit
 
-import com.dzzchao.fwanandroid.BASEURL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import kotlin.math.log
+
+const val BASE_URL = "https://www.wanandroid.com"
+
+const val CODE_SUCCESS = 0
 
 class RetrofitHelper {
 
@@ -26,13 +28,11 @@ class RetrofitHelper {
 
 
         private val retrofit = Retrofit.Builder()
-            .baseUrl(BASEURL)
+            .baseUrl(BASE_URL)
             .client(myOkhttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        val retrofitService = retrofit.create(RetrofitService::class.java)
-
-
+        val retrofitService: RetrofitService = retrofit.create(RetrofitService::class.java)
     }
 
 }

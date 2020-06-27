@@ -14,25 +14,19 @@
         app:rightButtonText="搜索"
         app:titleText="首页" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vpBanner"
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
 
-    </androidx.viewpager2.widget.ViewPager2>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swipeRefresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcvAritcle"
+            android:id="@+id/rcvArticle"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
 
 </LinearLayout>

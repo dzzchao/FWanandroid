@@ -2,16 +2,16 @@ package com.dzzchao.fwanandroid
 
 import android.app.Application
 import android.content.Context
+import android.os.Environment
+import com.dzzchao.fwanandroid.utils.LifeCycleLogger
 import com.dzzchao.fwanandroid.utils.MyDebugTree
 import com.tencent.mars.xlog.Log
 import com.tencent.mars.xlog.Xlog
 import timber.log.Timber
 import java.lang.reflect.Proxy
 
-const val BASEURL = "https://www.wanandroid.com"
 
 class App : Application() {
-
 
     companion object {
         lateinit var context: Context
@@ -25,23 +25,26 @@ class App : Application() {
 
         context = applicationContext
 
-        System.loadLibrary("c++_shared");
-        System.loadLibrary("marsxlog");
-
         if (BuildConfig.DEBUG) {
             Timber.plant(MyDebugTree())
             registerLifecycle()
-        }
+        } else {
 
+        }
         //Debug.stopMethodTracing()
         //TraceCompat.endSection()
     }
 
+    //打印生命周期
+    private fun registerLifecycle() {
+        LifeCycleLogger().install(this)
+    }
+
 
     /**
-     * 监听生命周期
+     * 用反射的方法监听生命周期
      */
-    private fun registerLifecycle() {
+    private fun registerLifecycle1() {
         val clazz = ActivityLifecycleCallbacks::class.java
         val callback = Proxy.newProxyInstance(
             clazz.classLoader,
