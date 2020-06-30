@@ -2,7 +2,6 @@ package com.dzzchao.fwanandroid.ui.homepage
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.dzzchao.fwanandroid.BaseFragment
-import com.dzzchao.fwanandroid.R
+import com.dzzchao.fwanandroid.base.BaseFragment
 import com.dzzchao.fwanandroid.databinding.HomeFragmentBinding
-import com.dzzchao.fwanandroid.retrofit.CODE_SUCCESS
 import com.dzzchao.fwanandroid.ui.search.SearchActivity
 import com.dzzchao.fwanandroid.utils.showToast
 import com.dzzchao.fwanandroid.view.TitleBar

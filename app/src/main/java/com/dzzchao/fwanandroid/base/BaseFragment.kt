@@ -1,4 +1,4 @@
-package com.dzzchao.fwanandroid
+package com.dzzchao.fwanandroid.base
 
 import androidx.fragment.app.Fragment
 
